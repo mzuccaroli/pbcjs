@@ -11,7 +11,10 @@ export const healthRoutes: FastifyPluginAsyncTypebox<HealthRoutesOptions> = asyn
     '/health',
     { schema: { response: { 200: HealthResponse, 503: HealthResponse } } },
     async (_request, reply) => {
-      const dbOk = await opts.checkDb().catch(() => false)
+      const dbOk = await opts.checkDb().catch((err: unknown) => {
+        app.log.warn({ err }, 'health: db check failed')
+        return false
+      })
       return reply.code(dbOk ? 200 : 503).send({
         status: dbOk ? 'ok' : 'degraded',
         db: dbOk ? 'ok' : 'down',

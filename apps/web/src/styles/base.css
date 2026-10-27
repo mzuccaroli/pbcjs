@@ -1,0 +1,23 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--pbc-color-bg);
+  color: var(--pbc-color-text);
+  font-family: var(--pbc-font-body);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--pbc-font-heading);
+}
+
+a {
+  color: var(--pbc-color-primary);
+}

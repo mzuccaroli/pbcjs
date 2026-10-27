@@ -1,0 +1,18 @@
+:root {
+  --pbc-color-bg: #16181d;
+  --pbc-color-surface: #20232b;
+  --pbc-color-text: #e6e6e6;
+  --pbc-color-text-muted: #9aa0ab;
+  --pbc-color-primary: #c9a227;
+  --pbc-color-danger: #e0605e;
+  --pbc-color-chat-action: #d9b46c;
+  --pbc-color-chat-master: #8fb3d9;
+  --pbc-font-body: system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
+  --pbc-font-heading: georgia, 'Times New Roman', serif;
+  --pbc-font-chat: var(--pbc-font-body);
+  --pbc-radius-base: 6px;
+  --pbc-space-1: 0.25rem;
+  --pbc-space-2: 0.5rem;
+  --pbc-space-3: 1rem;
+  --pbc-space-4: 2rem;
+}

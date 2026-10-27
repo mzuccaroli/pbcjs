@@ -1,0 +1,37 @@
+name: pbcjs
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: pbc
+      POSTGRES_DB: pbc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U pbc -d pbc']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: pbcjs:local
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://pbc:${POSTGRES_PASSWORD}@postgres:5432/pbc
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - '${APP_PORT:-3000}:3000'
+    volumes:
+      - data:/app/data
+    restart: unless-stopped
+
+volumes:
+  pgdata: {}
+  data: {}

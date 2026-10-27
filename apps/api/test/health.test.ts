@@ -33,6 +33,6 @@ describe('GET /api/health', () => {
     })
     const res = await app.inject({ method: 'GET', url: '/api/health' })
     expect(res.statusCode).toBe(503)
-    expect(res.json()).toMatchObject({ db: 'down' })
+    expect(res.json()).toEqual({ status: 'degraded', db: 'down', version: '1.2.3' })
   })
 })

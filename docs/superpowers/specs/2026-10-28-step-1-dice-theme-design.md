@@ -3,7 +3,7 @@
 - **Data:** 2026-10-28
 - **Stato:** approvato in brainstorming, in revisione
 - **Riferimenti:** [design di fondazione](2026-10-27-pbcjs-foundation-design.md) §5, §6, §9, §10
-- **Piani:** 1a `packages/dice`, 1b `packages/theme` (indipendenti, eseguiti in sequenza)
+- **Piani:** [1a `packages/dice`](../plans/2026-10-28-step-1a-dice.md), [1b `packages/theme`](../plans/2026-10-28-step-1b-theme.md) (indipendenti, eseguiti in sequenza)
 
 ## 1. Obiettivo
 
@@ -127,7 +127,7 @@ pnpm --filter @pbcjs/dice roll "4d6kh3+{forza}" --var forza=3 [--json]
 | `tokens`               | oggetto con categorie opzionali `color`, `font`, `radius`, `space`, `image` |
 | `layout`, `components` | riservati: accettati con qualsiasi valore e ignorati                        |
 
-Ogni categoria è una mappa `chiave → valore`, con chiave `^[a-z][a-z0-9-]*$`.
+Ogni categoria è una mappa `chiave → valore`, con chiave `^[a-z0-9][a-z0-9-]*$` (le chiavi numeriche servono a `space`: `1`, `2`, ...). Le chiavi numeriche vengono emesse prima delle altre e in ordine crescente, come da ordine delle proprietà JavaScript.
 
 | Categoria         | Valori ammessi                                                                                                               |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------- |

@@ -2,3 +2,5 @@ export { ThemeManifest, ThemeTokens, TOKEN_CATEGORIES, type TokenCategory } from
 export { validateTheme, type ThemeValidationError, type ValidateThemeResult } from './validate'
 export { mergeWithDefault } from './merge'
 export { toCssVariables, type CssVariablesOptions } from './css-vars'
+export { ThemeError, type ThemeErrorCode } from './errors'
+export { sanitizeCustomCss, type SanitizeResult } from './sanitize'

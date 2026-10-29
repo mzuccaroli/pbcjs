@@ -10,6 +10,9 @@ export interface SanitizeResult {
 
 const BLOCKED_PROPERTIES = new Set(['behavior', '-moz-binding'])
 const SAFE_DATA_URL = /^data:image\//i
+// C0 controls and space are exactly what the URL parser strips at the ends
+// eslint-disable-next-line no-control-regex
+const EDGE_CONTROLS = /^[\x00-\x20]+|[\x00-\x20]+$/g
 const HAS_SCHEME = /^[a-z][a-z0-9+.-]*:/i
 
 /**
@@ -50,11 +53,16 @@ function isUnsafeValue(value: string): boolean {
   if (value.includes('\\')) return true
   let unsafe = false
   valueParser(value).walk((node) => {
+    if (node.type === 'word') {
+      // `expression (` parses as a word followed by an anonymous paren group
+      if (node.value.toLowerCase() === 'expression') unsafe = true
+      return
+    }
     if (node.type !== 'function') return
     const name = node.value.toLowerCase()
     if (name === 'expression') {
       unsafe = true
-    } else if (name === 'url') {
+    } else if (name === 'url' || name === 'src') {
       const url = valueParser
         .stringify(node.nodes)
         .trim()
@@ -70,7 +78,9 @@ function isUnsafeValue(value: string): boolean {
 }
 
 function isExternalUrl(url: string): boolean {
-  const trimmed = url.trim()
+  // Browsers resolve urls with the WHATWG parser: tab/LF/CR vanish anywhere and
+  // leading/trailing C0 controls and spaces are stripped, so test what they see.
+  const trimmed = url.replace(/[\t\n\r]/g, '').replace(EDGE_CONTROLS, '')
   if (SAFE_DATA_URL.test(trimmed)) return false
   return trimmed.startsWith('//') || HAS_SCHEME.test(trimmed)
 }

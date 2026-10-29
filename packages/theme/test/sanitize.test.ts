@@ -46,6 +46,31 @@ describe('sanitizeCustomCss', () => {
     expect(result.css).not.toContain(declaration)
   })
 
+  it.each([
+    'background: url("ht\ttps://evil.example/t.png")',
+    'background: url("/\t/evil.example/t.png")',
+    'background: url("\x01https://evil.example/t.png")',
+    'background: url("\x1f//evil.example/t.png")',
+    'background-image: image-set("ht\ttps://evil.example/a.png" 1x)',
+    'background: src("https://evil.example/t.png")',
+    'background: expression (alert(1))',
+  ])('removes the declaration hidden from naive parsing %j', (declaration) => {
+    const result = sanitizeCustomCss(`.a { color: red; ${declaration}; }`)
+    expect(result.removed).toEqual([declaration])
+    expect(result.css).toContain('color: red')
+    expect(result.css).not.toContain('evil.example')
+    expect(result.css).not.toContain('expression')
+  })
+
+  it.each(['background: url("img/a.png")', 'background: url(data:image/png;base64,AAAA)'])(
+    'keeps the safe declaration %j',
+    (declaration) => {
+      const result = sanitizeCustomCss(`.a { ${declaration}; }`)
+      expect(result.removed).toEqual([])
+      expect(result.css).toContain(declaration)
+    },
+  )
+
   it('removes external fonts inside @font-face', () => {
     const result = sanitizeCustomCss(
       '@font-face { font-family: X; src: url(https://fonts.example/x.woff2); }',

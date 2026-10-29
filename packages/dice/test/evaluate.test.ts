@@ -131,4 +131,20 @@ describe('roll', () => {
   it.each(['2d6kh3', '2d6kl0'])('rejects %j with DICE_INVALID_KEEP', (formula) => {
     expect(catchDiceError(() => roll(formula)).code).toBe('DICE_INVALID_KEEP')
   })
+
+  it.each([
+    ['{x}+1', { x: NaN }],
+    ['{x}+1', { x: 1.5 }],
+    ['{x}+1', { x: Infinity }],
+    ['{x}d6', { x: Infinity }],
+    ['9007199254740991*9007199254740991', {}],
+    ['max(9007199254740991*9007199254740991,1)', {}],
+  ])('rejects non-safe-integer values in %j with DICE_LIMIT', (formula, vars) => {
+    expect(catchDiceError(() => roll(formula, { vars })).code).toBe('DICE_LIMIT')
+  })
+
+  it('never returns a negative zero total', () => {
+    expect(Object.is(roll('0*-1').total, 0)).toBe(true)
+    expect(Object.is(roll('-0').total, 0)).toBe(true)
+  })
 })

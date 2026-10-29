@@ -61,9 +61,9 @@ function evalNode(node: DiceNode, ctx: Context): number {
     case 'group':
       return evalNode(node.expr, ctx)
     case 'neg':
-      return 0 - evalNode(node.expr, ctx)
+      return checked(0 - evalNode(node.expr, ctx))
     case 'call':
-      return Math[node.fn](...node.args.map((arg) => evalNode(arg, ctx)))
+      return checked(Math[node.fn](...node.args.map((arg) => evalNode(arg, ctx))))
     case 'dice':
       return evalDice(node, ctx)
     case 'binary': {
@@ -71,14 +71,14 @@ function evalNode(node: DiceNode, ctx: Context): number {
       const right = evalNode(node.right, ctx)
       switch (node.op) {
         case '+':
-          return left + right
+          return checked(left + right)
         case '-':
-          return left - right
+          return checked(left - right)
         case '*':
-          return left * right
+          return checked(left * right)
         case '/':
           if (right === 0) throw new DiceError('DICE_DIVISION_BY_ZERO', 'Division by zero')
-          return Math.floor(left / right)
+          return checked(Math.floor(left / right))
       }
     }
   }
@@ -134,7 +134,20 @@ function lookup(node: VarNode, vars: Record<string, number>): number {
   if (!Object.hasOwn(vars, node.name) || value === undefined) {
     throw new DiceError('DICE_UNKNOWN_VARIABLE', `Unknown variable "{${node.name}}"`, node.pos)
   }
+  if (!Number.isSafeInteger(value)) {
+    throw new DiceError(
+      'DICE_LIMIT',
+      `Variable "{${node.name}}" must be a safe integer, got ${value}`,
+      node.pos,
+    )
+  }
   return value
+}
+
+/** Rejects results outside the safe-integer range and normalises -0 to 0. */
+function checked(value: number): number {
+  if (!Number.isSafeInteger(value)) throw new DiceError('DICE_LIMIT', 'Result is too large')
+  return value || 0
 }
 
 function render(node: DiceNode, vars: Record<string, number>): string {

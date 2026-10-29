@@ -90,4 +90,26 @@ describe('dice properties', () => {
       ),
     )
   })
+
+  it('arithmetic on safe-integer vars returns a safe-integer total or a DiceError', () => {
+    const safe = fc.integer({ min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER })
+    fc.assert(
+      fc.property(
+        fc.constantFrom('{a}+{b}', '{a}-{b}', '{a}*{b}', '{a}/{b}', 'max({a},{b})*{a}'),
+        safe,
+        safe,
+        (formula, a, b) => {
+          try {
+            const { total } = roll(formula, { vars: { a, b } })
+            return Number.isSafeInteger(total) && !Object.is(total, -0)
+          } catch (err) {
+            return (
+              err instanceof DiceError &&
+              (err.code === 'DICE_LIMIT' || err.code === 'DICE_DIVISION_BY_ZERO')
+            )
+          }
+        },
+      ),
+    )
+  })
 })

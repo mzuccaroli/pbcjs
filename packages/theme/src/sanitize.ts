@@ -31,7 +31,11 @@ export function sanitizeCustomCss(css: string): SanitizeResult {
 
   const removed: string[] = []
   root.walkAtRules((rule) => {
-    if (rule.name.toLowerCase() === 'import' || isUnsafeValue(rule.params)) {
+    if (
+      rule.name.includes('\\') ||
+      rule.name.toLowerCase() === 'import' ||
+      isUnsafeValue(rule.params)
+    ) {
       removed.push(`@${rule.name} ${rule.params}`)
       rule.remove()
     }

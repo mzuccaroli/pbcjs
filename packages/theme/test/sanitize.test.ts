@@ -85,6 +85,31 @@ describe('sanitizeCustomCss', () => {
     expect(result.removed).toHaveLength(1)
   })
 
+  it.each(['@i\\mport "https://evil.example/a.css";', '@i\\6d port "https://evil.example/a.css";'])(
+    'removes escaped @import variant %j',
+    (rule) => {
+      // postcss splits the name at the backslash, so the escape ends up in the params
+      const result = sanitizeCustomCss(`${rule}\n.pbc-chat { color: red; }`)
+      expect(result.css).not.toContain('evil.example')
+      expect(result.css).toContain('.pbc-chat')
+      expect(result.removed).toHaveLength(1)
+    },
+  )
+
+  it.each(['@\\69mport "https://evil.example/a.css";', '@\\import "https://evil.example/a.css";'])(
+    'rejects at-rule with a leading escape %j as invalid CSS',
+    (rule) => {
+      let error: unknown
+      try {
+        sanitizeCustomCss(rule)
+      } catch (err) {
+        error = err
+      }
+      expect(error).toBeInstanceOf(ThemeError)
+      expect((error as ThemeError).code).toBe('THEME_CSS_INVALID')
+    },
+  )
+
   it('throws THEME_CSS_INVALID on unparsable CSS', () => {
     let error: unknown
     try {

@@ -13,6 +13,7 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint . && stylelint \"**/*.{css,vue}\"",
     "format": "prettier --write .",
+    "theme:build": "pnpm --filter @pbcjs/theme build:default",
     "db:up": "docker compose -f docker/compose.dev.yml --env-file .env up -d",
     "db:down": "docker compose -f docker/compose.dev.yml --env-file .env down",
     "prepare": "husky"

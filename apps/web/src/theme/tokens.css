@@ -1,3 +1,4 @@
+/* Generated from themes/default/theme.json by pnpm theme:build — do not edit */
 :root {
   --pbc-color-bg: #16181d;
   --pbc-color-surface: #20232b;
@@ -9,7 +10,7 @@
   --pbc-color-chat-master: #8fb3d9;
   --pbc-font-body: system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
   --pbc-font-heading: georgia, 'Times New Roman', serif;
-  --pbc-font-chat: var(--pbc-font-body);
+  --pbc-font-chat: system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
   --pbc-radius-base: 6px;
   --pbc-space-1: 0.25rem;
   --pbc-space-2: 0.5rem;

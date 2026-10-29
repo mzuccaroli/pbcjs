@@ -8,12 +8,14 @@
   },
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "build:default": "tsx scripts/build-default.ts"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.52"
   },
   "devDependencies": {
+    "tsx": "^4.23.15",
     "vitest": "^3.2.7"
   }
 }

@@ -1,0 +1,33 @@
+{
+  "id": "default",
+  "name": "Default",
+  "version": "1.0.0",
+  "tokens": {
+    "color": {
+      "bg": "#16181d",
+      "surface": "#20232b",
+      "text": "#e6e6e6",
+      "text-muted": "#9aa0ab",
+      "primary": "#c9a227",
+      "danger": "#e0605e",
+      "chat-action": "#d9b46c",
+      "chat-master": "#8fb3d9"
+    },
+    "font": {
+      "body": "system-ui, -apple-system, 'Segoe UI', roboto, sans-serif",
+      "heading": "georgia, 'Times New Roman', serif",
+      "chat": "system-ui, -apple-system, 'Segoe UI', roboto, sans-serif"
+    },
+    "radius": {
+      "base": "6px"
+    },
+    "space": {
+      "1": "0.25rem",
+      "2": "0.5rem",
+      "3": "1rem",
+      "4": "2rem"
+    }
+  },
+  "layout": null,
+  "components": null
+}
